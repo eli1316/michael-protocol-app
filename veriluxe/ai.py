@@ -1,5 +1,7 @@
 """Thin wrapper around the OpenAI API for the VeriLuxe Guardian."""
 
+import os
+
 import streamlit as st
 from openai import OpenAI
 
@@ -7,12 +9,15 @@ DEFAULT_MODEL = "gpt-4o"
 
 
 def _secret(name: str, default: str | None = None) -> str | None:
+    # Streamlit Cloud provides secrets.toml; Docker hosts (Render, Railway,
+    # Fly, Cloud Run) provide environment variables. Support both.
     # st.secrets raises StreamlitSecretNotFoundError when no secrets.toml
     # exists at all, so a plain .get() is not enough.
     try:
-        return st.secrets.get(name, default)
+        value = st.secrets.get(name)
     except Exception:
-        return default
+        value = None
+    return value or os.environ.get(name) or default
 
 
 def get_client() -> OpenAI | None:

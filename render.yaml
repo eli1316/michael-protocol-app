@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: veriluxe-michael-protocol
+    runtime: docker
+    plan: starter
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o
